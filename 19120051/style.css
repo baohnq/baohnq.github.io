@@ -1,0 +1,14 @@
+#canvas {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -180px 0 0 20px;
+}
+
+#video {
+    position: absolute;
+    width: 30%;
+    top: 50%;
+    left: 50%;
+    margin: -180px 0 0 -500px;
+}
