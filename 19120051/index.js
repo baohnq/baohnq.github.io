@@ -21,19 +21,32 @@ document.addEventListener('DOMContentLoaded', function () {
 
 function draw(v, c, bc, cw, ch) {
     if (v.paused || v.ended) return false;
-    // First, draw it into the backing canvas
+    // bước 1, vẽ vào canvas
     bc.drawImage(v, 0, 0, cw, ch);
-    // Grab the pixel data from the backing canvas
+    // lấy dữ liệu pixel trong canvas
     var idata = bc.getImageData(0, 0, cw, ch);
     var data = idata.data;
     var w = idata.width;
     var limit = data.length
-    // Loop through the subpixels, convoluting each using an edge-detection matrix.
+    var temp = 200;
+    //tạo ảnh grayscale 
+    for (var i = 0; i < limit; i+=4) {
+        temp = data[i]+data[i+1] + data[i+2];
+        temp/=3;
+        data[i]=temp;
+        data[i+1]=temp;
+        data[i+2]=temp;
+    }
+    // Lặp qua từng pixel và lấy gradient
     for (var i = 0; i < limit; i++) {
         if (i % 4 == 3) continue;
-        data[i] = 127 + 2 * data[i] - data[i + 4] - data[i + w * 4];
+        temp = 127 + 2 * data[i] - data[i + w * 4] - data[i + 4];
+        // lấy ngưỡng 140
+        if (temp<140)
+            data[i] = 0;
+        else data[i]=255 ;
     }
-    // Draw the pixels onto the visible canvas
+    // Vẽ lên lại
     c.putImageData(idata, 0, 0);
     // Start over!
     setTimeout(draw, 20, v, c, bc, cw, ch);
